@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>聽梅花說易</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;900&display=swap" rel="stylesheet">
+    <style>
+        /* 視覺設定：神秘微光漸層背景 */
+        body { font-family: 'Helvetica Neue', Arial, sans-serif; background: radial-gradient(circle at 50% 30%, #2a2a35 0%, #101014 100%); color: #E0E0E0; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 20px; box-sizing: border-box; overflow: hidden; }
+        
+        /* --- 儀式感開場畫面 --- */
+        #intro-screen {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: #101014;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 1.5s ease-out, visibility 1.5s ease-out;
+        }
+        .intro-content {
+            text-align: center;
+            animation: slowFadeIn 2s ease-in-out;
+            padding: 20px;
+        }
+        .intro-title {
+            font-family: 'Noto Serif TC', serif;
+            color: #D4AF37;
+            font-size: 42px;
+            letter-spacing: 6px;
+            margin-bottom: 15px;
+            font-weight: 900;
+            text-shadow: 0 4px 20px rgba(212, 175, 55, 0.4);
+        }
+        .intro-slogan {
+            color: #AAA;
+            font-size: 16px;
+            letter-spacing: 3px;
+            margin-bottom: 50px;
+            font-family: 'Noto Serif TC', serif;
+        }
+        .intro-hint {
+            color: #D4AF37;
+            font-size: 14px;
+            margin-bottom: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            opacity: 0.8;
+        }
+        .btn-enter {
+            background: transparent;
+            color: #D4AF37;
+            border: 1px solid #D4AF37;
+            padding: 12px 35px;
+            font-size: 15px;
+            border-radius: 30px;
+            cursor: pointer;
+            letter-spacing: 2px;
+            transition: all 0.4s;
+        }
+        .btn-enter:hover {
+            background: rgba(212, 175, 55, 0.15);
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
+            transform: scale(1.05);
+        }
+
+        /* --- 主畫面容器 --- */
+        .container { 
+            background: rgba(30, 30, 35, 0.65); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(212, 175, 55, 0.15); padding: 40px 50px; border-radius: 20px; box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7); max-width: 480px; width: 100%; text-align: center; 
+            opacity: 0; transform: translateY(20px); transition: all 1.5s ease-out; display: none;
+        }
+        .container.show {
+            opacity: 1; transform: translateY(0); display: block;
+        }
+
+        h1 { font-family: 'Noto Serif TC', serif; color: #D4AF37; margin-bottom: 8px; font-size: 30px; letter-spacing: 4px; font-weight: 900; }
+        p.subtitle { color: #999; font-size: 14px; margin-bottom: 35px; letter-spacing: 1.5px; font-family: 'Noto Serif TC', serif; }
+        
+        .question-group { text-align: left; margin-bottom: 25px; }
+        label { color: #CCC; font-size: 14px; display: block; margin-bottom: 10px; }
+        textarea { width: 100%; height: 85px; background-color: rgba(0, 0, 0, 0.3); border: 1px solid rgba(255, 255, 255, 0.1); color: #FFF; border-radius: 12px; padding: 12px 15px; font-size: 15px; resize: none; box-sizing: border-box; outline: none; transition: all 0.3s ease; line-height: 1.5; }
+        textarea:focus { border-color: #D4AF37; box-shadow: 0 0 10px rgba(212, 175, 55, 0.2); }
+        
+        .example-tags { margin-top: 12px; display: flex; flex-wrap: wrap; gap: 8px; }
+        .tag { background-color: rgba(212, 175, 55, 0.05); color: #D4AF37; border: 1px solid rgba(212, 175, 55, 0.2); padding: 6px 12px; border-radius: 20px; font-size: 12px; cursor: pointer; transition: all 0.3s ease; }
+        .tag:hover { background-color: #D4AF37; color: #121212; box-shadow: 0 2px 8px rgba(212, 175, 55, 0.3); transform: translateY(-1px); }
+        
+        .input-group { display: flex; justify-content: space-between; margin-bottom: 20px; gap: 10px; }
+        input { width: 33%; padding: 15px 10px; background-color: rgba(0, 0, 0, 0.3); border: 1px solid rgba(255, 255, 255, 0.1); color: #D4AF37; border-radius: 12px; font-size: 20px; font-family: 'Noto Serif TC', serif; text-align: center; outline: none; transition: border 0.3s; }
+        input:focus { border-color: #D4AF37; }
+        
+        button { width: 100%; padding: 16px; border: none; border-radius: 12px; font-size: 16px; font-weight: bold; cursor: pointer; transition: all 0.3s; margin-bottom: 15px; letter-spacing: 1px; }
+        .btn-primary { background: linear-gradient(135deg, #D4AF37 0%, #AA8922 100%); color: #121212; }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3); }
+        .btn-secondary { background-color: transparent; border: 1px solid #D4AF37; color: #D4AF37; }
+        .btn-secondary:hover { background-color: rgba(212, 175, 55, 0.1); }
+        
+        .divider { margin: 30px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.08); position: relative; }
+        .divider span { position: absolute; top: -10px; left: 50%; transform: translateX(-50%); background-color: #1e1e23; padding: 0 15px; color: #666; font-size: 12px; border-radius: 10px; }
+        
+        #result-box { margin-top: 35px; padding: 25px; background-color: rgba(0, 0, 0, 0.4); border-radius: 12px; border-left: 4px solid #D4AF37; text-align: left; display: none; }
+        .highlight { color: #D4AF37; font-weight: bold; font-family: 'Noto Serif TC', serif; }
+        .simple-analysis-box { margin-top: 20px; background-color: rgba(212, 175, 55, 0.05); border: 1px solid rgba(212, 175, 55, 0.3); border-radius: 8px; padding: 15px; border-left: 4px solid #AA8922; }
+        
+        .music-box { margin-top: 25px; padding: 15px; background: rgba(0,0,0,0.6); border-radius: 12px; border: 1px solid rgba(255,255,255,0.05); text-align: center; box-shadow: inset 0 0 20px rgba(0,0,0,0.5); }
+        .music-title { color: #D4AF37; font-size: 14px; margin-bottom: 12px; font-weight: bold; letter-spacing: 1px; display: flex; align-items: center; justify-content: center; gap: 8px;}
+        iframe { border-radius: 8px; width: 100%; height: 180px; border: none; opacity: 0.9; transition: opacity 0.3s; }
+        iframe:hover { opacity: 1; }
+        
+        .ai-prompt-section { margin-top: 20px; border: 1px dashed rgba(212, 175, 55, 0.4); border-radius: 8px; padding: 15px; background-color: rgba(255, 255, 255, 0.02); }
+        .prompt-text { font-size: 12px; color: #999; white-space: pre-wrap; max-height: 120px; overflow-y: auto; margin-bottom: 15px; line-height: 1.6; padding-right: 5px; }
+        .prompt-text::-webkit-scrollbar { width: 6px; }
+        .prompt-text::-webkit-scrollbar-thumb { background-color: rgba(212, 175, 55, 0.3); border-radius: 10px; }
+        .btn-copy { background-color: rgba(0, 0, 0, 0.5); color: #D4AF37; border: 1px solid rgba(212, 175, 55, 0.5); padding: 10px 15px; font-size: 13px; border-radius: 6px; width: 100%; margin-bottom: 0; cursor: pointer; transition: all 0.3s;}
+        .btn-copy:hover { background-color: #D4AF37; color: #121212; }
+
+        @keyframes slowFadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body>
+
+<!-- 🌟 儀式感開場畫面 -->
+<div id="intro-screen">
+    <div class="intro-content">
+        <div class="intro-title">聽梅花說易</div>
+        <div class="intro-slogan">閉上眼，讓梅花說易為你解開生活的謎</div>
+        <div class="intro-hint">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18v-6a9 9 0 0 1 18 0v6"></path><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"></path></svg>
+            建議戴上耳機，保持內心平靜
+        </div>
+        <button class="btn-enter" onclick="enterApp()">我準備好了</button>
+    </div>
+</div>
+
+<!-- 🌟 主畫面 -->
+<div class="container" id="main-app">
+    <h1>聽梅花說易</h1>
+    <p class="subtitle">閉上眼，讓梅花說易為你解開生活的謎</p>
+
+    <div class="question-group">
+        <label for="question">第一步：祈請所問之事</label>
+        <textarea id="question" placeholder="請在心中默念您的問題，或選擇下方標籤..."></textarea>
+        <div class="example-tags">
+            <span class="tag" onclick="setExample('我想請問近期的事業發展與職涯轉型走向如何？')">💼 職涯轉型</span>
+            <span class="tag" onclick="setExample('我想了解目前這段感情（或曖昧關係）未來的發展走向？')">💖 感情發展</span>
+            <span class="tag" onclick="setExample('請幫我看看近期在這項投資或財務規劃上的運勢如何？')">💰 財務投資</span>
+            <span class="tag" onclick="setExample('我想問近期在創意與創作上，是否能迎來新的靈感突破？')">🎨 創作靈感</span>
+            <span class="tag" onclick="setExample('我目前面臨兩個重要的選擇，想請教該如何決斷？')">🤔 抉擇指引</span>
+            <span class="tag" onclick="setExample('我想了解與特定對象（或合作夥伴）接下來的互動走向。')">🤝 合作關係</span>
+        </div>
+    </div>
+
+    <div style="text-align: left; margin-bottom: 12px;"><label>第二步：選擇起卦方式</label></div>
+
+    <div class="input-group">
+        <input type="number" id="num1" placeholder="數一" min="1">
+        <input type="number" id="num2" placeholder="數二" min="1">
+        <input type="number" id="num3" placeholder="數三" min="1">
+    </div>
+    <button class="btn-primary" onclick="triggerNumberGua()">靈動數字起卦</button>
+
+    <div class="divider"><span>或</span></div>
+
+    <button class="btn-secondary" onclick="triggerTimeGua()">使用當下時間起卦</button>
+
+    <div id="result-box">
+        <p style="color: #888; font-size: 13px; margin-bottom: 15px;">— 卦象生成完畢 —</p>
+        <p><strong>得出本卦：</strong><span id="res-hexagram-name" class="highlight" style="font-size: 22px;"></span></p>
+        
+        <div class="simple-analysis-box">
+            <p id="res-analysis-text" style="color: #E0E0E0; font-size: 15px; line-height: 1.6; margin: 0;"></p>
+        </div>
+
+        <div class="music-box">
+            <div class="music-title">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#D4AF37" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg>
+                局勢專屬頻率：<span id="music-mood"></span>
+            </div>
+            <iframe id="yt-player" src="" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+        </div>
+        
+        <div class="ai-prompt-section">
+            <label style="color: #D4AF37; font-size: 14px; margin-bottom: 8px;">✨ 專屬大師級解卦咒語已生成：</label>
+            <div id="prompt-content" class="prompt-text"></div>
+            <button class="btn-copy" onclick="copyPrompt()">一鍵複製咒語，傳送給 AI 大師深度解卦</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // 🌟 控制儀式感開場的函數
+    function enterApp() {
+        const intro = document.getElementById('intro-screen');
+        const app = document.getElementById('main-app');
+        
+        // 畫面漸隱
+        intro.style.opacity = '0';
+        intro.style.visibility = 'hidden';
+        
+        // 顯示主程式並恢復滾動
+        setTimeout(() => {
+            document.body.style.overflow = 'auto';
+            app.style.display = 'block';
+            // 延遲一點點加上 show class 來觸發浮現動畫
+            setTimeout(() => {
+                app.classList.add('show');
+            }, 50);
+        }, 800);
+    }
+
+    const MUSIC_PLAYLIST = {
+        '比和': { id: 'lFcSrYw-ARY', mood: '平靜與和諧 (Relaxing Piano)' },     
+        '體生用': { id: '81NB2teRjMg', mood: '專注與沉澱 (Deep Focus Flow)' },    
+        '用生體': { id: 'jJPMnTXl63E', mood: '溫暖與希望 (Positive Energy)' }, 
+        '體剋用': { id: 'aHG-yvT_YgM', mood: '磅礡與破局 (Epic Motivation)' },  
+        '用剋體': { id: 'WJU2qE9uA2Q', mood: '深層療癒與靜心 (432Hz Healing)' } 
+    };
+
+    const BAGUA = [ null, { name: '乾', element: '金' }, { name: '兌', element: '金' }, { name: '離', element: '火' }, { name: '震', element: '木' }, { name: '巽', element: '木' }, { name: '坎', element: '水' }, { name: '艮', element: '土' }, { name: '坤', element: '土' } ];
+    const HEXAGRAM_NAMES = [ [], [ "", "乾為天", "天澤履", "天火同人", "天雷無妄", "天風姤", "天水訟", "天山遯", "天地否" ], [ "", "澤天夬", "兌為澤", "澤火革", "澤雷隨", "澤風大過", "澤水困", "澤山咸", "澤地萃" ], [ "", "火天大有", "火澤睽", "離為火", "火雷噬嗑", "火風鼎", "火水未濟", "火山旅", "火地晉" ], [ "", "雷天大壯", "雷澤歸妹", "雷火豐", "震為雷", "雷風恆", "雷水解", "雷山小過", "雷地豫" ], [ "", "風天小畜", "風澤中孚", "風火家人", "風雷益", "巽為風", "風水渙", "風山漸", "風地觀" ], [ "", "水天需", "水澤節", "水火既濟", "水雷屯", "水風井", "坎為水", "水山蹇", "水地比" ], [ "", "山天大畜", "山澤損", "山火賁", "山雷頤", "山風蠱", "山水蒙", "艮為山", "山地剝" ], [ "", "地天泰", "地澤臨", "地火明夷", "地雷復", "地風升", "地水師", "地山謙", "坤為地" ] ];
+    const WUXING_RELATION = { '金': { generates: '水', controls: '木' }, '水': { generates: '木', controls: '火' }, '木': { generates: '火', controls: '土' }, '火': { generates: '土', controls: '金' }, '土': { generates: '金', controls: '水' } };
+
+    function analyzeTiYong(tiElem, yongElem) {
+        if (tiElem === yongElem) return { type: '比和', text: "【比和 (平穩)】局勢發展平穩順遂，所問之事若能順勢而為，大多能得到圓滿結果。" };
+        if (WUXING_RELATION[tiElem].generates === yongElem) return { type: '體生用', text: "【體生用 (耗損)】代表您需要為此事付出較多心力與時間，過程較為勞累，但持續耕耘仍有機會達成。" };
+        if (WUXING_RELATION[yongElem].generates === tiElem) return { type: '用生體', text: "【用生體 (進益)】大吉！您將會得到外界的助力或貴人相助。局勢對您有利，容易心想事成。" };
+        if (WUXING_RELATION[tiElem].controls === yongElem) return { type: '體剋用', text: "【體剋用 (掌控)】事情的主導權掌握在您手中。雖需克服困難，但只要積極應對，最終能成功破局。" };
+        if (WUXING_RELATION[yongElem].controls === tiElem) return { type: '用剋體', text: "【用剋體 (阻滯)】外界阻力較大，可能會遇到意料之外的困難。建議暫時保守應對，多加觀察。" };
+        return { type: '比和', text: "吉凶未明，建議深思熟慮。" };
+    }
+
+    function getRemainder(sum, divisor) { const r = sum % divisor; return r === 0 ? divisor : r; }
+    
+    function setExample(text) { 
+        document.getElementById('question').value = text; 
+        const textarea = document.getElementById('question');
+        textarea.style.borderColor = '#D4AF37';
+        setTimeout(() => { textarea.style.borderColor = 'rgba(255, 255, 255, 0.1)'; }, 400);
+    }
+
+    function generateResult(upperIdx, lowerIdx, movingLine) {
+        const upper = BAGUA[upperIdx], lower = BAGUA[lowerIdx], isUpperYong = movingLine >= 4;
+        const tiElement = isUpperYong ? lower.element : upper.element;
+        const yongElement = isUpperYong ? upper.element : lower.element;
+        const analysis = analyzeTiYong(tiElement, yongElement);
+
+        return {
+            hexagramName: HEXAGRAM_NAMES[upperIdx][lowerIdx],
+            upperName: upper.name, upperElement: upper.element, lowerName: lower.name, lowerElement: lower.element, movingLine: movingLine,
+            tiName: isUpperYong ? lower.name : upper.name, tiElement: tiElement, yongName: isUpperYong ? upper.name : lower.name, yongElement: yongElement,
+            analysisType: analysis.type, analysisText: analysis.text
+        };
+    }
+
+    function triggerNumberGua() {
+        const n1 = parseInt(document.getElementById('num1').value), n2 = parseInt(document.getElementById('num2').value), n3 = parseInt(document.getElementById('num3').value);
+        if (!n1 || !n2 || !n3) { alert("請填寫三個數字！"); return; }
+        const question = document.getElementById('question').value || "通用運勢占卜";
+        displayResult(question, `靈動數字起卦 (${n1}, ${n2}, ${n3})`, generateResult(getRemainder(n1, 8), getRemainder(n2, 8), getRemainder(n3, 6)));
+    }
+
+    function triggerTimeGua() {
+        const now = new Date(), sum1 = now.getFullYear() + (now.getMonth() + 1) + now.getDate(), sum2 = sum1 + now.getHours() + now.getMinutes();
+        const question = document.getElementById('question').value || "通用運勢占卜";
+        displayResult(question, `當下時間起卦`, generateResult(getRemainder(sum1, 8), getRemainder(sum2, 8), getRemainder(sum2, 6)));
+    }
+
+    function displayResult(question, method, result) {
+        document.getElementById('res-hexagram-name').innerText = result.hexagramName;
+        document.getElementById('res-analysis-text').innerText = result.analysisText;
+        
+        const musicData = MUSIC_PLAYLIST[result.analysisType];
+        document.getElementById('music-mood').innerText = musicData.mood;
+        document.getElementById('yt-player').src = `https://www.youtube.com/embed/${musicData.id}?rel=0&controls=1`;
+
+        const aiPrompt = `【角色設定】
+你是一位精通《易經》與「梅花易數」的國學大師，具備深厚的哲學底蘊與豐富的人生閱歷。你的解卦風格客觀、溫暖、精準，且充滿引導人心的智慧。
+
+【占卜背景】
+- 求占者所問之事：「${question}」
+- 起卦方式：${method}
+
+【卦象精密參數】
+- 本卦（初始狀態）：【${result.hexagramName}】（上${result.upperName}，下${result.lowerName}）
+- 互卦（發展過程）：請根據本卦自行推演。
+- 變卦（最終結局）：動爻為第【${result.movingLine}】爻，請據此推演變卦。
+- 五行體用：體卦為【${result.tiName}】（五行屬${result.tiElement}，代表求占者），用卦為【${result.yongName}】（五行屬${result.yongElement}，代表所問之事或外境）。
+
+【大師解析任務】
+請嚴格依照以下結構，為求占者進行深度解惑：
+
+1. ☯️ 體用局勢剖析：
+判斷體用五行生剋關係，直指求占者目前在局勢中的主導權、阻力來源或貴人方位。
+
+2. ⏳ 三卦時間軸推演（請結合卦象的自然意象，如「水火交融」、「雷動風散」等畫面感來解說）：
+- 【本卦】：解析事情的初始輪廓與當下現況。
+- 【互卦】：剖析事情在發展過程中，潛藏的內部變數、隱患或轉機。
+- 【變卦】：推斷事情最終的走向與結局。
+
+3. 📖 爻辭暗示與易理心法：
+- 針對第【${result.movingLine}】爻的「爻辭」，精準解釋其對此事件的具體暗示。
+- 精選一句最契合此局勢的《易經·繫辭傳》（或彖傳、象傳）原文，並用白話文闡述其背後的人生哲理，幫助求占者拉高心態格局，用更高的眼界看待眼前的煩惱。
+
+4. 💡 趨吉避凶指南：
+給予求占者 2 到 3 點具體、可執行的白話文行動方針（例如：該進或退、該等待或主動出擊、該注意哪種人際關係）。`;
+
+        document.getElementById('prompt-content').innerText = aiPrompt;
+        document.getElementById('result-box').style.display = 'block';
+        document.getElementById('result-box').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function copyPrompt() {
+        navigator.clipboard.writeText(document.getElementById('prompt-content').innerText).then(() => {
+            alert("✨ 咒語已成功複製！現在可以貼給 AI 大師進行深度解卦了。");
+        }).catch(err => { alert("複製失敗，請手動複製。"); });
+    }
+</script>
+
+</body>
+</html>
